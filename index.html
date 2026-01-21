@@ -1,501 +1,202 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Modern Portfolio — Resume · Bio-data · Registration</title>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg:#071226; --card:#0b1220; --muted:#94a3b8; --accent:#06b6d4;
-      --accent2:#7c3aed; --glass: rgba(255,255,255,0.03); --radius:14px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#eaf2ff;background:
-      linear-gradient(180deg,#071226 0%, #041021 100%);-webkit-font-smoothing:antialiased}
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1100px;margin:0 auto;padding:20px}
-    /* Header */
-    .header{position:sticky;top:12px;z-index:60;background:linear-gradient(180deg, rgba(7,10,16,0.6), rgba(7,10,16,0.28));backdrop-filter: blur(6px);
-      border-radius:12px;padding:10px 14px;margin-bottom:22px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
-    .nav-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#021018;font-weight:800;box-shadow:0 6px 18px rgba(6,182,212,0.12)}
-    .nav-links{display:flex;gap:10px;align-items:center}
-    .nav-links a{padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:700;transition:all .18s}
-    .nav-links a.active, .nav-links a:hover{color:var(--accent)}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;font-weight:700;border:0;cursor:pointer}
-    .primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#021018;box-shadow:0 10px 30px rgba(6,182,212,0.12)}
-    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-
-    /* Hero */
-    .hero{display:grid;grid-template-columns:1fr 380px;gap:26px;align-items:center;margin-bottom:22px}
-    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:26px;border-radius:16px;box-shadow:0 10px 40px rgba(2,6,23,0.6)}
-    .title{font-size:28px;margin:0 0 6px;color:#fff}
-    .lead{color:var(--muted);margin:0 0 14px;line-height:1.5}
-    .cta-row{display:flex;gap:12px;flex-wrap:wrap}
-
-    /* avatar */
-    .avatar{background:var(--card);padding:18px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
-    .avatar img{width:120px;height:120px;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,0.04)}
-    .avatar h3{margin:0;color:#fff}
-    .avatar p{color:var(--muted);margin:0;font-size:14px}
-
-    /* Cards */
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
-    .card{background:var(--glass);padding:14px;border-radius:12px;min-height:110px;color:#dbeafe}
-    .card h4{margin:0 0 8px;color:#fff}
-    .muted{color:var(--muted);font-size:14px}
-
-    /* Two-column resume */
-    .resume-grid{display:grid;grid-template-columns:1fr 340px;gap:20px}
-    .section{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;margin-bottom:14px}
-    .skill {display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
-    .skill:last-child{border-bottom:0}
-    .biodata-table{width:100%;border-collapse:collapse}
-    .biodata-table td{padding:10px;border-bottom:1px dashed rgba(255,255,255,0.03);color:var(--muted)}
-    .label{font-weight:700;color:#fff}
-
-    /* form */
-    form label{display:block;margin-top:8px;color:#cbd5e1;font-weight:700}
-    input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:#fff;margin-top:6px;font-size:15px}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .full{grid-column:1/-1}
-    .actions{display:flex;gap:10px;margin-top:12px}
-
-    /* result */
-    .result{background:linear-gradient(180deg, rgba(6,182,212,0.06), rgba(124,58,237,0.03));padding:12px;border-radius:10px;margin-top:12px;color:#e8fbff}
-
-    /* small animations */
-    .fade-up{transform:translateY(8px);opacity:0;transition:all .6s cubic-bezier(.2,.8,.2,1)}
-    .fade-up.show{transform:none;opacity:1}
-
-    /* responsive */
-    @media (max-width:980px){
-      .hero{grid-template-columns:1fr}
-      .grid-3{grid-template-columns:repeat(2,1fr)}
-      .resume-grid{grid-template-columns:1fr}
-    }
-    @media (max-width:640px){
-      .nav-links{display:none}
-      .header{padding:8px}
-      .grid-3{grid-template-columns:1fr}
-      .hero{gap:14px}
-      .avatar img{width:96px;height:96px}
-      .resume-grid{grid-template-columns:1fr}
-    }
-
-    /* print-ready resume */
-    @media print{
-      body{background:white;color:black}
-      .header, .btn {display:none}
-      .container{padding:0;max-width:unset}
-      .resume-grid{grid-template-columns:1fr}
-    }
-
-    /* small helpers */
-    .muted-sm{color:var(--muted);font-size:13px}
-    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);color:var(--muted);font-weight:700}
-    .center{display:flex;align-items:center;justify-content:center}
-    footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
-  </style>
+  <title>Shashank SJ — Portfolio</title>
+  <meta name="description" content="Shashank SJ — Web Developer portfolio. Projects, skills, contact." />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Shashank SJ — Web Developer" />
+  <meta property="og:description" content="Portfolio of Shashank SJ. Web development, projects and contact." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/og-image.png" />
+  <link rel="icon" href="assets/favicon.png" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <div class="nav-row">
-        <div class="brand">
-          <div class="logo" aria-hidden>SJ</div>
-          <div>
-            <div style="font-weight:800;color:#fff">Your Name</div>
-            <div style="font-size:12px;color:var(--muted)">Web Dev · Blockchain · </div>
+  <!-- Theme toggle -->
+  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle" title="Toggle theme">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path id="theme-icon" fill="currentColor"/></svg>
+  </button>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#home">Shashank<span class="accent">SJ</span></a>
+      <nav aria-label="Main navigation">
+        <ul class="nav">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a class="btn secondary resume-btn" href="resume.pdf" download>Download Resume</a>
+    </div>
+  </header>
+
+  <!-- HERO with Canvas Particles -->
+  <main>
+    <section id="home" class="hero">
+      <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-content container">
+        <div class="intro">
+          <h1 class="name">Hi, I'm <span class="accent">Shashank SJ</span></h1>
+          <p class="role">
+            <span id="typewriter" aria-live="polite"></span>
+          </p>
+          <p class="lead">
+            I build modern, fast, and delightful web applications. I love clean UI, performant JS, and engineering-first architecture.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#projects">View Projects</a>
+            <a class="btn ghost" href="#contact">Hire Me</a>
           </div>
         </div>
 
-        <nav class="nav-links" aria-label="Main navigation">
-          <a href="#home" class="nav-link active">Home</a>
-          <a href="#resume" class="nav-link">Resume</a>
-          <a href="#biodata" class="nav-link">Bio-data</a>
-          <a href="#register" class="nav-link">Register</a>
-        </nav>
-
-        <div style="display:flex;gap:10px;align-items:center">
-          <a class="btn ghost" href="#" id="printBtn" title="Print resume">Print</a>
-          <button id="menuBtn" class="btn ghost" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
-        </div>
-      </div>
-
-      <!-- mobile menu -->
-      <div id="mobileMenu" style="display:none;margin-top:10px">
-        <nav style="display:flex;flex-direction:column;gap:6px">
-          <a href="#home" class="nav-link">Home</a>
-          <a href="#resume" class="nav-link">Resume</a>
-          <a href="#biodata" class="nav-link">Bio-data</a>
-          <a href="#register" class="nav-link">Register</a>
-        </nav>
-      </div>
-    </header>
-
-    <!-- HERO / HOME -->
-    <main id="home" class="hero-card hero" role="main">
-      <section>
-        <h1 class="title">Modern portfolio • resume • bio-data</h1>
-        <p class="lead">Single-file responsive website built for your Web Technology Lab assignment. Includes a modern resume, a formal biodata table, and an online registration form that works locally or with an optional server-side PHP processor.</p>
-
-        <div class="cta-row">
-          <a class="btn primary" href="#resume">View Resume</a>
-          <a class="btn ghost" href="#register">Open Registration</a>
-        </div>
-
-        <div class="grid-3" style="margin-top:18px">
-          <div class="card fade-up"><h4>Responsive</h4><p class="muted">Mobile-first layout, print-ready resume.</p></div>
-          <div class="card fade-up"><h4>Interactive</h4><p class="muted">Client-side validation & graceful server fallback.</p></div>
-          <div class="card fade-up"><h4>Easy to host</h4><p class="muted">Works as static page; add PHP for server saving.</p></div>
-        </div>
-      </section>
-
-      <aside class="avatar fade-up" aria-label="Profile card">
-        <!-- SVG avatar so the file is standalone -->
-        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));">
-          <rect width="120" height="120" rx="14" fill="transparent"></rect>
-          <g transform="translate(20,18)">
-            <circle cx="40" cy="30" r="20" fill="#021018" opacity="0.12"></circle>
-            <rect x="0" y="60" width="80" height="20" rx="8" fill="#021018" opacity="0.08"></rect>
-          </g>
-        </svg>
-        <h3>Your Name</h3>
-        <p class="muted">Computer Science student • Frontend & Web</p>
-        <div style="margin-top:8px;width:100%;display:flex;gap:8px">
-          <a class="btn primary" href="#register">Register</a>
-          <a class="btn ghost" href="#biodata">Bio-data</a>
-        </div>
-      </aside>
-    </main>
-
-    <!-- RESUME -->
-    <section id="resume" style="margin-top:8px">
-      <h2 style="color:#fff">Resume</h2>
-      <div class="resume-grid" style="margin-top:12px">
-        <div>
-          <div class="section">
-            <h3 style="margin:0">Your Name</h3>
-            <p class="muted">One-line summary: focused on web development, blockchain, and trading — building practical projects.</p>
+        <div class="hero-stats" aria-hidden="true">
+          <div class="stat">
+            <strong id="years">3+</strong><span>Years</span>
           </div>
-
-          <div class="section">
-            <h4>Experience</h4>
-            <div class="skill"><div><strong>Intern — Company</strong><div class="muted-sm">June 2024 - Aug 2024</div></div><div class="muted-sm">Frontend</div></div>
-            <div class="skill"><div><strong>Project — Portfolio</strong><div class="muted-sm">2025</div></div><div class="muted-sm">HTML/CSS/JS</div></div>
+          <div class="stat">
+            <strong id="projects-count">12</strong><span>Projects</span>
           </div>
-
-          <div class="section">
-            <h4>Education</h4>
-            <div class="muted-sm">B.Tech — CSE — Your College — 20XX - Present</div>
-          </div>
-
-          <div class="section">
-            <h4>Projects</h4>
-            <ul class="muted-sm">
-              <li>Trader Finder — Web utilities for traders</li>
-              <li>Registration app — PHP backend & CSV storage (optional)</li>
-            </ul>
+          <div class="stat">
+            <strong id="clients">6</strong><span>Clients</span>
           </div>
         </div>
-
-        <aside>
-          <div class="section">
-            <h4>Contact</h4>
-            <div class="muted-sm"><span class="label">Email:</span> alliswellsj9@gmail.com</div>
-            <div class="muted-sm"><span class="label">Location:</span> India</div>
-          </div>
-
-          <div class="section">
-            <h4>Skills</h4>
-            <div class="skill"><div>HTML/CSS</div><div class="muted-sm">Expert</div></div>
-            <div class="skill"><div>JavaScript</div><div class="muted-sm">Advanced</div></div>
-            <div class="skill"><div>PHP</div><div class="muted-sm">Intermediate</div></div>
-            <div class="skill"><div>Git</div><div class="muted-sm">Comfortable</div></div>
-          </div>
-        </aside>
       </div>
     </section>
 
-    <!-- BIODATA -->
-    <section id="biodata" style="margin-top:16px">
-      <h2 style="color:#fff">Bio-data</h2>
-      <div class="section" style="margin-top:8px">
-        <table class="biodata-table">
-          <tr><td class="label">Name</td><td>Your Name</td></tr>
-          <tr><td class="label">Father's Name</td><td>Father's Name</td></tr>
-          <tr><td class="label">DOB</td><td>DD/MM/YYYY</td></tr>
-          <tr><td class="label">Gender</td><td>Male</td></tr>
-          <tr><td class="label">Address</td><td>Your Address</td></tr>
-          <tr><td class="label">Education</td><td>B.Tech — CSE — College — Year</td></tr>
-          <tr><td class="label">Contact</td><td>Email / Phone</td></tr>
-        </table>
+    <!-- ABOUT -->
+    <section id="about" class="section about container">
+      <h2>About Me</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            I'm a Computer Science student and full-stack web developer focusing on building production-grade frontends,
+            performance-optimized UI, and clean engineering. I enjoy designing components, optimizing UX, and shipping features end-to-end.
+          </p>
+          <ul class="about-list">
+            <li>📍 Based in India</li>
+            <li>💻 Specialties: JavaScript, HTML, CSS, React (learning), Node.js (basics)</li>
+            <li>🎯 Interests: Trading, Blockchain, Low-latency UI</li>
+          </ul>
+        </div>
+        <div class="about-card">
+          <div class="glass">
+            <img src="assets/avatar.png" alt="Avatar" class="avatar" />
+            <h3>Shashank SJ</h3>
+            <p>Web Developer • Learner • Trader</p>
+            <div class="socials">
+              <a href="#" aria-label="GitHub" title="GitHub">GH</a>
+              <a href="#" aria-label="LinkedIn" title="LinkedIn">IN</a>
+              <a href="#" aria-label="Twitter" title="Twitter">TW</a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- REGISTER / FORM -->
-    <section id="register" style="margin-top:20px">
-      <h2 style="color:#fff">Online Application / Registration</h2>
-      <div class="section" style="margin-top:8px">
-        <p class="muted-sm">Fill the form and click submit. If you host a `submit.php` in the same directory, the page will POST to it and display the server response. Otherwise, the form is handled client-side and you get a display + CSV download of the submission.</p>
-
-        <form id="regForm" novalidate>
-          <div class="form-grid">
-            <div>
-              <label for="name">Name *</label>
-              <input id="name" name="name" type="text" required placeholder="Your full name">
-            </div>
-            <div>
-              <label for="email">Email *</label>
-              <input id="email" name="email" type="email" required placeholder="you@example.com">
-            </div>
-            <div>
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" type="tel" placeholder="+91 9XXXXXXXXX">
-            </div>
-            <div>
-              <label for="course">Course</label>
-              <select id="course" name="course">
-                <option value="">-- select --</option>
-                <option>Web Development</option>
-                <option>Blockchain</option>
-                <option>Trading</option>
-              </select>
-            </div>
-
-            <div class="full">
-              <label for="bio">Short Bio</label>
-              <textarea id="bio" name="bio" rows="4" placeholder="A short description about yourself"></textarea>
-            </div>
+    <!-- SKILLS -->
+    <section id="skills" class="section skills">
+      <div class="container">
+        <h2>Skills</h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <canvas data-chart="90" width="140" height="140" class="radial"></canvas>
+            <h4>HTML</h4>
           </div>
-
-          <div class="actions">
-            <button type="submit" class="btn primary">Submit Application</button>
-            <button type="reset" class="btn ghost">Reset</button>
-            <button type="button" id="downloadCSV" class="btn ghost" style="display:none">Download CSV</button>
+          <div class="skill-card">
+            <canvas data-chart="88" width="140" height="140" class="radial"></canvas>
+            <h4>CSS</h4>
           </div>
-        </form>
+          <div class="skill-card">
+            <canvas data-chart="80" width="140" height="140" class="radial"></canvas>
+            <h4>JavaScript</h4>
+          </div>
+          <div class="skill-card">
+            <canvas data-chart="65" width="140" height="140" class="radial"></canvas>
+            <h4>React (Learning)</h4>
+          </div>
+        </div>
 
-        <!-- place to show result -->
-        <div id="resultArea" aria-live="polite"></div>
+        <div class="skill-bars" aria-hidden="false">
+          <div class="bar">
+            <label>Performance</label>
+            <div class="bar-track"><div class="bar-fill" data-fill="92"></div></div>
+          </div>
+          <div class="bar">
+            <label>Accessibility</label>
+            <div class="bar-track"><div class="bar-fill" data-fill="85"></div></div>
+          </div>
+          <div class="bar">
+            <label>UI Design</label>
+            <div class="bar-track"><div class="bar-fill" data-fill="78"></div></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <footer>
-      <div class="muted">Built for Web Technology Lab assignment • Single-file portfolio</div>
+    <!-- PROJECTS -->
+    <section id="projects" class="section projects container">
+      <h2>Projects</h2>
+      <div class="projects-controls">
+        <input id="search" placeholder="Search projects..." aria-label="Search projects" />
+        <div class="filters">
+          <button data-filter="all" class="filter active">All</button>
+          <button data-filter="web" class="filter">Web</button>
+          <button data-filter="tool" class="filter">Tool</button>
+          <button data-filter="ui" class="filter">UI</button>
+        </div>
+      </div>
+
+      <div id="projects-grid" class="projects-grid" aria-live="polite"></div>
+    </section>
+
+    <!-- Project Modal -->
+    <div id="project-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <button class="modal-close" aria-label="Close modal">&times;</button>
+        <div class="modal-body">
+          <img id="modal-img" src="" alt="" />
+          <h3 id="modal-title"></h3>
+          <p id="modal-desc"></p>
+          <p id="modal-tech"></p>
+          <div class="modal-actions">
+            <a id="modal-live" class="btn primary" href="#" target="_blank" rel="noopener">Live</a>
+            <a id="modal-git" class="btn ghost" href="#" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section contact container">
+      <h2>Contact</h2>
+      <form id="contact-form" class="contact-form" novalidate>
+        <div class="form-row">
+          <input type="text" id="name" name="name" placeholder="Your name" required />
+          <input type="email" id="email" name="email" placeholder="Your email" required />
+        </div>
+        <textarea id="message" name="message" placeholder="Your message" rows="6" required></textarea>
+        <div class="form-actions">
+          <button type="submit" class="btn primary">Send Message</button>
+          <button type="button" id="contact-mail" class="btn ghost">Open Email</button>
+        </div>
+      </form>
+      <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span id="year"></span> Shashank SJ — Built with ❤️ — <small>Advanced static portfolio</small></p>
+      </div>
     </footer>
-  </div>
+  </main>
 
-  <script>
-    // -------------------------
-    // Small UI helpers & behavior
-    // -------------------------
-    (function(){
-      // scrollspy-ish for nav active state
-      const navLinks = document.querySelectorAll('.nav-link');
-      function updateNavActive(){
-        const fromTop = window.scrollY + 140;
-        navLinks.forEach(link=>{
-          const id = link.getAttribute('href').replace('#','');
-          const el = document.getElementById(id);
-          if(!el) return;
-          const top = el.offsetTop;
-          const bottom = top + el.offsetHeight;
-          if(fromTop >= top && fromTop <= bottom){
-            link.classList.add('active');
-          } else link.classList.remove('active');
-        });
-      }
-      updateNavActive();
-      window.addEventListener('scroll', updateNavActive);
-
-      // mobile menu toggle
-      const menuBtn = document.getElementById('menuBtn');
-      const mobileMenu = document.getElementById('mobileMenu');
-      menuBtn.addEventListener('click', ()=>{
-        const shown = mobileMenu.style.display === 'block';
-        mobileMenu.style.display = shown ? 'none' : 'block';
-        menuBtn.setAttribute('aria-expanded', String(!shown));
-      });
-
-      // print button - prints resume section only (uses CSS to hide others)
-      const printBtn = document.getElementById('printBtn');
-      printBtn.addEventListener('click', (e)=>{
-        e.preventDefault();
-        // Briefly hide other sections via adding a class, then print
-        window.print();
-      });
-
-      // animate fade-up sections
-      const io = new IntersectionObserver((entries)=>{
-        entries.forEach(en=>{
-          if(en.isIntersecting) en.target.classList.add('show');
-        });
-      }, {threshold:0.12});
-      document.querySelectorAll('.fade-up').forEach(el=>io.observe(el));
-    })();
-
-    // -------------------------
-    // FORM handling
-    // -------------------------
-    (function(){
-      const form = document.getElementById('regForm');
-      const resultArea = document.getElementById('resultArea');
-      const downloadBtn = document.getElementById('downloadCSV');
-
-      // Optional server endpoint name:
-      // If you upload submit.php to the same folder as this index.html,
-      // the script will try to POST to './submit.php' and show the server response.
-      const SERVER_ENDPOINT = './submit.php';
-
-      // simple client-side validator
-      function validate(formData){
-        const name = formData.get('name')?.trim();
-        const email = formData.get('email')?.trim();
-        if(!name) return 'Name is required';
-        if(!email) return 'Email is required';
-        // simple email pattern (basic)
-        if(!/^\S+@\S+\.\S+$/.test(email)) return 'Email looks invalid';
-        return '';
-      }
-
-      // build a CSV line from object (single row)
-      function toCSVRow(obj){
-        // values in a safe quoted CSV
-        const vals = ['timestamp','name','email','phone','course','bio'].map(k=>{
-          const v = obj[k] ? String(obj[k]) : '';
-          return '"' + v.replace(/"/g,'""') + '"';
-        });
-        return vals.join(',') + '\n';
-      }
-
-      // create downloadable blob
-      function triggerCSVDownload(csvText, filename='submission.csv'){
-        const blob = new Blob([csvText], {type:'text/csv;charset=utf-8;'});
-        const url = URL.createObjectURL(blob);
-        downloadBtn.style.display = 'inline-block';
-        downloadBtn.onclick = ()=> {
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-        };
-      }
-
-      // build result HTML
-      function renderResult(obj, serverReply){
-        const htmlParts = [];
-        htmlParts.push('<div class="result">');
-        htmlParts.push('<h3 style="margin:0 0 6px">Submission received</h3>');
-        if(serverReply){
-          htmlParts.push('<p class="muted-sm">Server response: <strong>'+escapeHtml(serverReply)+'</strong></p>');
-        } else {
-          htmlParts.push('<p class="muted-sm">Processed locally (no server). You can download the CSV or copy the data below.</p>');
-        }
-        htmlParts.push('<table style="width:100%;border-collapse:collapse">');
-        for(const k of ['timestamp','name','email','phone','course','bio']){
-          htmlParts.push('<tr><td style="padding:6px;width:130px;font-weight:700;color:#dbeafe">'+k.toUpperCase()+'</td><td style="padding:6px;color:#eaf2ff">'+escapeHtml(obj[k]||'')+'</td></tr>');
-        }
-        htmlParts.push('</table>');
-        htmlParts.push('</div>');
-        resultArea.innerHTML = htmlParts.join('');
-      }
-
-      function escapeHtml(s){
-        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-      }
-
-      form.addEventListener('submit', async (ev)=>{
-        ev.preventDefault();
-        resultArea.innerHTML = '';
-        downloadBtn.style.display = 'none';
-        const fd = new FormData(form);
-        const validationErr = validate(fd);
-        if(validationErr){
-          resultArea.innerHTML = '<div class="result" style="background:rgba(255,70,70,0.06)"><strong style="color:#ffb4b4">'+validationErr+'</strong></div>';
-          return;
-        }
-
-        // build object
-        const obj = {
-          timestamp: new Date().toISOString().replace('T',' ').slice(0,19),
-          name: fd.get('name') || '',
-          email: fd.get('email') || '',
-          phone: fd.get('phone') || '',
-          course: fd.get('course') || '',
-          bio: fd.get('bio') || ''
-        };
-
-        // Try server POST first (fetch). If server exists and responds, display server response.
-        try {
-          // attempt a fetch to check if server file exists (HEAD)
-          const headResp = await fetch(SERVER_ENDPOINT, {method:'HEAD'});
-          if(headResp.ok || headResp.type === 'opaque'){
-            // endpoint exists — POST as form data
-            const postResp = await fetch(SERVER_ENDPOINT, {method:'POST', body: new URLSearchParams(obj)});
-            const text = await postResp.text();
-            renderResult(obj, text);
-            // if server saved to CSV, you'll see a success message returned by server
-            downloadBtn.style.display = 'none'; // server handled storage
-            return;
-          }
-        } catch(err){
-          // server not reachable or HEAD failed -> fallback to local
-        }
-
-        // FALLBACK: local handling — show result and create CSV download
-        renderResult(obj, null);
-        const csv = toCSVRow(obj);
-        triggerCSVDownload(csv, 'submission_'+(new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')) + '.csv');
-      });
-
-    })();
-  </script>
-
-  <!--
-    --------------------------
-    OPTIONAL SERVER (PHP) NOTE
-    --------------------------
-    If you want server-side saving (Assignment 2 requirement), upload a file named `submit.php`
-    to the same folder as this index.html (i.e. ./submit.php). Example minimal PHP file:
-
-    <?php
-    // submit.php (place this file on your PHP-capable host in same dir as index.html)
-    function sanitize($v){ return htmlspecialchars(trim($v)); }
-    $name = isset($_POST['name'])? sanitize($_POST['name']):'';
-    $email = isset($_POST['email'])? sanitize($_POST['email']):'';
-    $phone = isset($_POST['phone'])? sanitize($_POST['phone']):'';
-    $course = isset($_POST['course'])? sanitize($_POST['course']):'';
-    $bio = isset($_POST['bio'])? sanitize($_POST['bio']):'';
-
-    if(!$name || !$email){
-      echo "Missing required fields (name or email).";
-      exit;
-    }
-
-    $ts = date('Y-m-d H:i:s');
-    $row = [$ts, $name, $email, $phone, $course, $bio];
-    $csvLine = '"' . implode('","', array_map(function($s){ return str_replace('"','""',$s); }, $row)) . '"' . PHP_EOL;
-    $file = __DIR__ . '/submissions.csv';
-    file_put_contents($file, $csvLine, FILE_APPEND | LOCK_EX);
-
-    echo "Saved successfully at $ts. Thank you, $name.";
-    ?>
-
-    Notes:
-    - Create an empty file 'submissions.csv' and set it writable (chmod 666) or ensure folder allows PHP to create/write it.
-    - Hosts to try: 000webhost (free), awardspace, InfinityFree, or any shared host with PHP support.
-    - After uploading submit.php, the single-file site will POST to it automatically and show the server reply.
-  -->
-
+  <script src="script.js" defer></script>
 </body>
 </html>
