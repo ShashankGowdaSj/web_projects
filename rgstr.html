@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Registration App — Form</title>
+  <meta name="description" content="Registration form with PHP backend (CSV storage)">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220; --card:#071726; --accent:#06b6d4; --accent2:#7c3aed; --muted:#94a3b8; --text:#e6eef6;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071226,#041021);color:var(--text);-webkit-font-smoothing:antialiased}
+    .wrap{max-width:920px;margin:28px auto;padding:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:var(--radius);box-shadow:0 8px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
+    h1{margin:0 0 8px;font-size:22px}
+    p.lead{color:var(--muted);margin:0 0 16px}
+    form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;font-weight:700;margin-top:10px;color:var(--text)}
+    input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
+    textarea{resize:vertical}
+    .full{grid-column:1/-1}
+    .actions{display:flex;gap:12px;margin-top:14px}
+    .btn{padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;border:0}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#031018}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+    .muted-sm{color:var(--muted);font-size:13px}
+    .result{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(90deg, rgba(6,182,212,0.04), rgba(124,58,237,0.03));border:1px solid rgba(255,255,255,0.02)}
+    @media (max-width:720px){ form .row{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main">
+      <h1>Online Registration</h1>
+      <p class="lead">Fill and submit. If server-side `submit.php` exists, the form will POST to it and save to <code>submissions.csv</code>. Otherwise, the page will let you download a CSV of your entry.</p>
+
+      <form id="regForm" autocomplete="on" novalidate>
+        <div class="row">
+          <div>
+            <label for="name">Full name *</label>
+            <input id="name" name="name" type="text" required placeholder="First Last">
+          </div>
+          <div>
+            <label for="email">Email *</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com">
+          </div>
+
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" placeholder="+91 9XXXXXXXXX">
+          </div>
+
+          <div>
+            <label for="course">Course</label>
+            <select id="course" name="course">
+              <option value="">-- select --</option>
+              <option value="web">Web Development</option>
+              <option value="block">Blockchain</option>
+              <option value="trade">Trading</option>
+            </select>
+          </div>
+
+          <div class="full">
+            <label for="bio">Short Bio</label>
+            <textarea id="bio" name="bio" rows="5" placeholder="Short intro about you"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="reset" class="btn btn-ghost">Reset</button>
+          <a href="admin.php" class="btn btn-ghost" style="margin-left:auto">Admin view</a>
+        </div>
+        <div id="result" aria-live="polite"></div>
+      </form>
+
+      <p class="muted-sm" style="margin-top:12px">Instructor tip: Upload <code>submit.php</code> (provided) to same folder to save entries server-side. Create an empty <code>submissions.csv</code> and set writable (chmod 666) or let PHP create it.</p>
+    </div>
+  </div>
+
+  <script>
+    // Client-side logic: validation, server-check, fallback CSV download
+    (function(){
+      const form = document.getElementById('regForm');
+      const result = document.getElementById('result');
+      const SERVER = './submit.php';
+
+      function show(msg, isError=false){
+        result.innerHTML = '<div class="result" style="'+(isError ? 'background:rgba(255,80,80,0.06);color:#ffdfe0' : '')+'">'+msg+'</div>';
+      }
+
+      function validate(fd){
+        const name = fd.get('name')?.trim();
+        const email = fd.get('email')?.trim();
+        if(!name) return 'Name is required';
+        if(!email) return 'Email is required';
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Email looks invalid';
+        return '';
+      }
+
+      function toObj(fd){
+        return {
+          timestamp: new Date().toISOString().replace('T',' ').slice(0,19),
+          name: fd.get('name') || '',
+          email: fd.get('email') || '',
+          phone: fd.get('phone') || '',
+          course: fd.get('course') || '',
+          bio: fd.get('bio') || ''
+        };
+      }
+
+      function toCSV(obj){
+        const cols = ['timestamp','name','email','phone','course','bio'];
+        return cols.map(k => '"' + String(obj[k]||'').replace(/"/g,'""') + '"').join(',') + '\n';
+      }
+
+      async function serverAvailable(){
+        try {
+          const r = await fetch(SERVER, {method:'HEAD'});
+          return r.ok || r.type === 'opaque';
+        } catch(e){ return false; }
+      }
+
+      function triggerDownload(csv, filename='submission.csv'){
+        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      form.addEventListener('submit', async (ev)=>{
+        ev.preventDefault();
+        result.innerHTML = '';
+        const fd = new FormData(form);
+        const v = validate(fd);
+        if(v){ show(v, true); return; }
+        const obj = toObj(fd);
+
+        // try server
+        const srv = await serverAvailable();
+        if(srv){
+          try {
+            const resp = await fetch(SERVER, {method:'POST', body: new URLSearchParams(obj)});
+            const text = await resp.text();
+            show('<strong>Server response:</strong> ' + text);
+            return;
+          } catch(err){ /* fallback below */ }
+        }
+
+        // fallback local CSV
+        const csv = toCSV(obj);
+        show('Server not found — processed locally. Download will start automatically (or click Download).<br><br><pre style="white-space:pre-wrap;">' + csv + '</pre>');
+        triggerDownload(csv, 'submission_'+(new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')) + '.csv');
+      });
+    })();
+  </script>
+</body>
+</html>
