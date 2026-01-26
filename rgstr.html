@@ -83,7 +83,7 @@
   </div>
 
   <script>
-    // Client-side logic: validation, server-check, fallback CSV download
+
     (function(){
       const form = document.getElementById('regForm');
       const result = document.getElementById('result');
@@ -151,7 +151,7 @@
           } catch(err){ /* fallback below */ }
         }
 
-        // fallback local CSV
+   
         const csv = toCSV(obj);
         show('Server not found — processed locally. Download will start automatically (or click Download).<br><br><pre style="white-space:pre-wrap;">' + csv + '</pre>');
         triggerDownload(csv, 'submission_'+(new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')) + '.csv');
@@ -160,3 +160,4 @@
   </script>
 </body>
 </html>
+
