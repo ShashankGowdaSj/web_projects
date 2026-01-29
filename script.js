@@ -1,14 +1,9 @@
-/* Advanced Portfolio - script.js
-   - Edit projects inside `projectsData` below
-   - Replace EmailJS placeholders to enable sending
-*/
 
-// ---------- Utilities ----------
 const $ = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 const container = document.querySelector('.container');
 
-// Theme: load/save
+
 const THEME_KEY = 'portfolio_theme';
 function setTheme(theme){
   if(theme === 'light') document.documentElement.classList.add('light');
@@ -33,10 +28,10 @@ const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
 setTheme(savedTheme);
 updateThemeIcon();
 
-// Set year
+
 $('#year').textContent = new Date().getFullYear();
 
-// Smooth scroll for internal links
+
 $$('a[href^="#"]').forEach(a=>{
   a.addEventListener('click', e=>{
     const href = a.getAttribute('href');
@@ -48,7 +43,7 @@ $$('a[href^="#"]').forEach(a=>{
   });
 });
 
-// ---------- Hero canvas particles ----------
+
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -80,7 +75,7 @@ function draw(){
   ctx.fillStyle = g;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // draw particles and connecting lines
+ 
   for(let i=0;i<particles.length;i++){
     const p = particles[i];
     p.x += p.vx;
@@ -95,7 +90,7 @@ function draw(){
     ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
     ctx.fill();
 
-    // lines
+
     for(let j=i+1;j<particles.length;j++){
       const q = particles[j];
       const dx = p.x - q.x;
@@ -123,7 +118,7 @@ window.addEventListener('resize', ()=>{
   initParticles();
 });
 
-// Initialize canvas
+
 startCanvas();
 
 // ---------- Typewriter ----------
@@ -185,7 +180,7 @@ function drawRadials(){
 drawRadials();
 window.addEventListener('resize', drawRadials);
 
-// ---------- Skill bars animate on view ----------
+
 const barFills = document.querySelectorAll('.bar-fill');
 function animateBars(){
   const trigger = document.getElementById('skills');
@@ -269,7 +264,7 @@ function renderProjects(filter='all', q=''){
 }
 renderProjects();
 
-// Filters
+
 $$('.filter').forEach(btn=>{
   btn.addEventListener('click', ()=> {
     $$('.filter').forEach(b=>b.classList.remove('active'));
@@ -283,7 +278,7 @@ $('#search').addEventListener('input', e=>{
   renderProjects(f, e.target.value);
 });
 
-// Modal logic
+
 const modal = $('#project-modal');
 const modalImg = $('#modal-img');
 const modalTitle = $('#modal-title');
@@ -406,3 +401,4 @@ if('IntersectionObserver' in window){
 
 // ---------- Init done ----------
 console.log('Advanced portfolio frontend loaded.');
+
